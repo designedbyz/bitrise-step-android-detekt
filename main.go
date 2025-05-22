@@ -98,13 +98,17 @@ func runDetektTask(config Config) error {
 			}
 
 			artifactName := filepath.Base(artifact.Path)
-			log.Printf(generated artifactName: %s", artifactName)
 
 			if exists {
 				timestamp := time.Now().Format("20060102150405")
 				ext := filepath.Ext(artifact.Name)
-				name := strings.TrimSuffix(filepath.Base(artifact.Name), ext)
-				artifact.Name = fmt.Sprintf("%s-%s%s", name, timestamp, ext)
+				slashed := filepath.ToSlash(artifact.Path)
+				substr := strings.TrimPrefix(slashed, config.ProjectLocation)
+				substr = strings.TrimPrefix(substr, "/")
+				cleaned := strings.ReplaceAll(substr, "/build/reports/detekt", "")
+				cleaned = strings.ReplaceAll(cleaned, ".html", "")
+				cleaned = strings.ReplaceAll(cleaned, "/", "-")
+				artifact.Name = fmt.Sprintf("%s-%s%s", cleaned, timestamp, ext)
 			}
 
 			log.Printf("  Export [ %s => $BITRISE_DEPLOY_DIR/%s ]", artifactName, artifact.Name)

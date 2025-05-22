@@ -98,6 +98,7 @@ func runDetektTask(config Config) error {
 			}
 
 			artifactName := filepath.Base(artifact.Path)
+			log.Printf(generated artifactName: %s", artifactName)
 
 			if exists {
 				timestamp := time.Now().Format("20060102150405")
